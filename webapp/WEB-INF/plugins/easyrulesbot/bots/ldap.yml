@@ -1,0 +1,63 @@
+## Site ldap bot 
+--- 
+name: Ldap (YAML)
+key: ldap
+description: Bot de recherche dans un annuaire
+language: fr
+avatarUrl: images/skin/plugins/easyrulesbot/modules/ldap/ldap-avatar.png
+standalone: false
+
+filters:
+    -   filter: DEBUG
+    -   filter: INSULT
+    -   filter: THANK
+    -   filter: LAUGH
+
+rules:
+    -   rule: SearchField
+        priority: 10
+        message: Bonjour ! Sur quel critère souhaitez-vous faire votre recherche ? Voici les choix possibles
+        buttons:
+        -   title: Nom
+            value: familyname
+        -   title: Prénom
+            value: name
+        -   title: Direction
+            value: direction
+        -   title: Email
+            value: mail
+        -   title: Téléphone
+            value: phonenumber
+        dataKey: searchfield
+        processor: SEARCH_FIELD
+        conditions:
+        -   condition: DATAKEY_VALUE_OR_NULL
+            parameters: [ searchfield , reinit ]
+
+    -   rule: SearchValue
+        priority: 11
+        message: Quelle valeur doit prendre ce critère ?
+        dataKey: searchvalue
+        processor: SEARCH_VALUE
+        conditions:
+        -   condition: DATAKEY_MISSING
+        responseComment: "{showdirectory}"
+
+    -   rule: AddCriteria
+        priority: 12
+        message: Vous avez trouvé ce que vous cherchiez ? Vous pouvez rajouter un critère à votre recherche ou faire une nouvelle recherche
+        dataKey: searchfield
+        processor: ADD_CRITERIA_LOOP
+        buttons:
+        -   title: Nom
+            value: familyname
+        -   title: Prénom
+            value: name
+        -   title: Direction
+            value: direction
+        -   title: Email
+            value: mail
+        -   title: Téléphone
+            value: phonenumber
+        -   title: Recommencer la recherche
+            value: reinit

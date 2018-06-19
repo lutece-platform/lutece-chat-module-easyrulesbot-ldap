@@ -1,0 +1,17 @@
+[familyname]
+familyname
+
+[name]
+name
+
+[direction]
+direction
+  
+[mail]
+mail
+
+[phonenumber]
+phonenumber
+
+[reinit]
+reinit

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" >
+
+    <bean id="easyrulesbot.processor.searchfield" class="fr.paris.lutece.plugins.easyrulesbot.service.response.processors.MultipleValuesResponseProcessor" >
+        <property name="name" value="SEARCH_FIELD" />
+        <property name="mutipleValuesMapFile" value="/WEB-INF/plugins/easyrulesbot/modules/ldap/searchfield.txt" />
+        <property name="invalidResponseMessageI18nKey" value="module.easyrulesbot.ldap.processor.searchfield.invalidResponse" />
+    </bean>
+
+    <bean id="easyrulesbot.processor.searchvalue" class="fr.paris.lutece.plugins.easyrulesbot.modules.ldap.service.SearchValueProcessor" >
+        <property name="name" value="SEARCH_VALUE" />
+        <property name="searchField" value="searchfield" />
+        <property name="ldapSearch" value="ldapsearch" />
+        <property name="showDirectory" value="showdirectory" />
+        <property name="invalidResponseMessageI18nKey" value="module.easyrulesbot.ldap.processor.searchvalue.invalidResponse" />
+    </bean>
+
+    <bean id="easyrulesbot.processor.addcriterialoop" class="fr.paris.lutece.plugins.easyrulesbot.modules.ldap.service.AddCriteriaLoopProcessor" >
+        <property name="name" value="ADD_CRITERIA_LOOP" />
+        <property name="mutipleValuesMapFile" value="/WEB-INF/plugins/easyrulesbot/modules/ldap/searchfield.txt" />
+        <property name="invalidResponseMessageI18nKey" value="module.easyrulesbot.ldap.processor.addcriterialoop.invalidResponse" />
+        <property name="listLoopRules">
+            <list>
+                <value>searchvalue</value>
+            </list>
+        </property>
+        <property name="reinitResponse" value="reinit" />
+        <property name="ldapSearch" value="ldapsearch" />
+    </bean>
+
+
+    <bean id="easyrulesbot.condition.dataKeyValueOrNull" class="fr.paris.lutece.plugins.easyrulesbot.service.bot.rules.conditions.ConditionFactory">
+        <property name="name" value="DATAKEY_VALUE_OR_NULL" />
+        <property name="className" value="fr.paris.lutece.plugins.easyrulesbot.modules.ldap.service.DataValueOrNullCondition" />
+    </bean>
+
+</beans>

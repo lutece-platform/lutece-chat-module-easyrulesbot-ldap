@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+    <properties>
+        <title>Module easyrulesbot ldap</title>
+    </properties>
+    <body>
+        <section name="Module easyrulesbot ldap">
+            <!--
+            <p>
+                <img src="images/easyrulesbot-ldap.png" />
+            </p>
+            -->
+            <subsection name="Introduction">
+                <p></p>
+            </subsection>
+            <subsection name="Configuration">
+                <p></p>
+            </subsection>
+            <subsection name="Usage">
+                <p></p>
+            </subsection>
+        </section>
+    </body>
+</document>

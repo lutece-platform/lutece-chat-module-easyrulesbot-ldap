@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<plug-in>
+    <name>easyrulesbot-ldap</name>
+    <class>fr.paris.lutece.portal.service.plugin.PluginDefaultImplementation</class>
+    <version>1.0.0-SNAPSHOT</version>
+    <documentation/>
+    <installation/>
+    <changes/>
+    <user-guide/>
+    <description>module.easyrulesbot.ldap.plugin.description</description>
+    <provider>module.easyrulesbot.ldap.plugin.provider</provider>
+    <provider-url>http://lutece.paris.fr</provider-url>
+    <icon-url>images/admin/skin/plugins/easyrulesbot/easyrulesbot.png</icon-url>
+    <copyright>Copyright (c) 2018 City of Paris</copyright>
+    <db-pool-required>1</db-pool-required>
+    
+    <core-version-dependency>
+        <min-core-version>4.1.0</min-core-version>
+        <max-core-version/>
+    </core-version-dependency>
+
+</plug-in>
