@@ -19,4 +19,15 @@
         <max-core-version/>
     </core-version-dependency>
 
+    <css-stylesheets>
+        <css-stylesheet>easyrulesbot/modules/ldap/easyrulesbot-ldap.css</css-stylesheet>
+    </css-stylesheets>
+
+    <applications>
+        <application>
+            <application-id>chatbot</application-id>
+            <application-class>fr.paris.lutece.plugins.chatbot.web.ChatBotApp</application-class>
+        </application>
+    </applications>
+
 </plug-in>

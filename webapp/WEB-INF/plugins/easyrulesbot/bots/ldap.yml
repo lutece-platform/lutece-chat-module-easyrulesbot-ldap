@@ -45,7 +45,7 @@ rules:
 
     -   rule: AddCriteria
         priority: 12
-        message: Vous avez trouvé ce que vous cherchiez ? Vous pouvez rajouter un critère à votre recherche ou faire une nouvelle recherche
+        message: Vous avez trouvé ce que vous cherchiez ? Vous pouvez rajouter un critère ou faire une nouvelle recherche
         dataKey: searchfield
         processor: ADD_CRITERIA_LOOP
         buttons:
