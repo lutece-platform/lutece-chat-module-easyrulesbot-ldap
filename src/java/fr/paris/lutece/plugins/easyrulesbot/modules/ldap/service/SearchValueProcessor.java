@@ -74,6 +74,7 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
 
     private static final String TEMPLATE_LDAP_FILE = "skin/plugins/easyrulesbot/modules/ldap/ldap.html";
     private static final String MARK_PERSONS_LIST = "persons_list";
+    private static final String MARK_CRITERIA_LIST = "criteria_list";
 
     private static String _strSearchField;
     private static String _strLdapSearch;
@@ -89,22 +90,28 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
     public String processResponse( String strResponse, Locale locale, Map mapData ) throws ResponseProcessingException
     {
         Map<String, String> map = (Map<String, String>) mapData;
-        String strParameters = ( map.get( _strLdapSearch ) != null ) ? map.get( _strLdapSearch ) : "" ;
 
-        for ( String strDataKey : map.keySet( ) )
+        if ( strResponse != null && !strResponse.isEmpty(  ) )
         {
-            if ( strDataKey.equals( _strSearchField ) && strResponse != null && !strResponse.isEmpty(  ) )
+            String strCriteriaName = map.get( _strSearchField );
+            if ( strCriteriaName != null )
             {
-                String strCriteriaName = map.get( strDataKey );
-                String strCriteriaKey = AppPropertiesService.getProperty( PROPERTY_DN_ATTRIBUTE_PREFIX + "." + strCriteriaName);
-                strParameters += "(" + strCriteriaKey + "=" + strResponse + "*)";
-                mapData.put( _strLdapSearch, strParameters );
-
-                String strDirectory = buildDirectory( mapData );
-                mapData.put( _strShowDirectory, strDirectory );
-
-                return strResponse;
+                String strParameters = map.get( _strLdapSearch );
+                if ( strParameters != null )
+                {
+                    strParameters += "," + strCriteriaName + ":" + strResponse;  
+                }
+                else
+                {
+                    strParameters = strCriteriaName + ":" + strResponse; 
+                }
+                mapData.put( _strLdapSearch, strParameters ); 
             }
+
+            String strDirectory = buildDirectory( mapData );
+            mapData.put( _strShowDirectory, strDirectory );
+
+            return strResponse;
         }
         
         throw new ResponseNotUnderstoodException( getInvalidResponse( locale ) );
@@ -197,8 +204,11 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
      */
     private String buildDirectory( Map mapData )
     {
+        Map<String, String> mapPersonSearchCriteria = getMapParameters( mapData );
+        
         Map<String, Object> model = new HashMap<String, Object>( );
-        model.put( MARK_PERSONS_LIST, getPersonList( mapData ) );
+        model.put( MARK_PERSONS_LIST, getPersonList( mapPersonSearchCriteria ) );
+        model.put( MARK_CRITERIA_LIST, mapPersonSearchCriteria );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_LDAP_FILE, LocaleService.getDefault(  ), model );
 
@@ -208,18 +218,18 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
     /**
      * Get the list of persons from ldap
      * 
-     * @param mapData
-     *            The map of data
+     * @param mapPersonSearchCriteria
+     *            The map of search criteria
      * @return The list of persons
      */
-    private Collection getPersonList( Map mapData )
+    private Collection getPersonList( Map<String, String> mapPersonSearchCriteria )
     {
         ArrayList<Map> personList = new ArrayList<Map>(  );
         SearchResult sr = null;
 
         DirContext context = null;
-
-        String strPersonSearchFilter = getParameters( mapData );
+        
+        String strPersonSearchFilter = getParameters( mapPersonSearchCriteria );
 
         try
         {
@@ -291,24 +301,59 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
     }
 
     /**
-     * Gets the criteria parameters list
+     * Gets the criteria parameters map
      * 
      * @param mapData
      *            The data provided by the bot
      * @return The criteria parameters list
      */
-    private static String getParameters( Map mapData )
+    private static Map<String, String> getMapParameters( Map mapData )
     {
         Map<String, String> map = (Map<String, String>) mapData;
-        for ( String strDataKey : map.keySet( ) )
+        Map<String, String> mapCriteria = new HashMap<String, String>();
+
+        String strCriteria = map.get( _strLdapSearch );
+
+        if ( strCriteria != null )
         {
-            if ( strDataKey.equals( _strLdapSearch ) )
+            String [ ] tabCriteria = strCriteria.split( "," );
+
+            for ( String strCriterion : tabCriteria )
             {
-                return "(&" + mapData.get( strDataKey ) + ")";
+                int x = strCriterion.indexOf(":");
+                if ( x > -1 )
+                {
+                    String strKey = strCriterion.substring(0, x);
+                    String strValue = strCriterion.substring(x + 1);
+                    mapCriteria.put(strKey, strValue);
+                }
             }
         }
+//        return "(&" + mapData.get( _strLdapSearch ) + ")";
 
-        return "";
+        return mapCriteria;
+    }
+
+    /**
+     * Gets the criteria parameters string
+     * 
+     * @param mapSearchCriteria
+     *            The map of search criteria
+     * @return The criteria parameters list
+     */
+    private static String getParameters( Map<String, String> mapSearchCriteria )
+    {
+        String strParameters = "";
+
+        for (Map.Entry<String, String> entry : mapSearchCriteria.entrySet())
+        {
+            String strCriteriaName = entry.getKey();
+            String strCriteriaKey = AppPropertiesService.getProperty( PROPERTY_DN_ATTRIBUTE_PREFIX + "." + strCriteriaName);
+            String strCriteriaValue = entry.getValue();
+            strParameters += "(" + strCriteriaKey + "=" + strCriteriaValue + "*)";
+        }
+
+        return ( strParameters.isEmpty( ) ) ? "" : "(&" + strParameters + ")";
     }
 
     /**

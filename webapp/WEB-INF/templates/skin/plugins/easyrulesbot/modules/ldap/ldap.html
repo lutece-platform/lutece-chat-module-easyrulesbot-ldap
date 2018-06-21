@@ -1,5 +1,14 @@
-<div>#i18n{module.easyrulesbot.ldap.result.display} : ${persons_list?size}</div>
+<div>#i18n{module.easyrulesbot.ldap.result.size} : ${persons_list?size}</div>
+<div>
+    #i18n{module.easyrulesbot.ldap.result.criteria} :
+    <ul>
+        <#list criteria_list as name, value>
+            <li>#i18n{module.easyrulesbot.ldap.searchParameter.${name}} : ${value}</li>
+        </#list>
+    </ul>
+</div>
 
+<div>#i18n{module.easyrulesbot.ldap.result.display} :</div>
 <#if persons_list?has_content>
     <#if persons_list?size lt 5>
         <#list persons_list as person>
