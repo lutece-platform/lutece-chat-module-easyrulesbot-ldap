@@ -1,7 +1,8 @@
 .person-card {
     display: inline-block;
-    text-align: center;
-    vertical-align: middle;
+    margin: 5px;
+    text-align: left;
+    vertical-align: top;
     border: 1px solid transparent;
     padding-top: 6px;
     padding-right: 12px;
@@ -12,4 +13,9 @@
     border-radius: 4px;
     color: #fff;
     background-color: #337ab7;
+}
+
+.bubble-bot {
+    max-height: 300px;
+    overflow-y: auto;
 }
