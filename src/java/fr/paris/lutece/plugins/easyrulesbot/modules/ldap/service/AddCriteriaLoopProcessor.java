@@ -54,6 +54,7 @@ public class AddCriteriaLoopProcessor extends AbstractProcessor implements Respo
     private List<String> _listLoopRules;
     private static String _strReinitResponse;
     private static String _strLdapSearch;
+    private List<String> _listInitialRules;
     private String _strInvalidResponseMessage;
     private String _strInvalidResponseMessageI18nKey;
 
@@ -119,6 +120,10 @@ public class AddCriteriaLoopProcessor extends AbstractProcessor implements Respo
         if ( strValue.equals( _strReinitResponse ) )
         {
             mapData.remove( _strLdapSearch );
+            for ( String strInitialRule : _listInitialRules )
+            {
+                mapData.remove( strInitialRule );
+            }
         }
 
         return strValue;
@@ -220,5 +225,16 @@ public class AddCriteriaLoopProcessor extends AbstractProcessor implements Respo
     public void setLdapSearch( String strLdapSearch )
     {
         _strLdapSearch = strLdapSearch;
+    }
+
+    /**
+     * Set the list of initial rules
+     * 
+     * @param listInitialRules
+     *            The list of initial rules
+     */
+    public void setListInitialRules( List<String> listInitialRules )
+    {
+        _listInitialRules = listInitialRules;
     }
 }

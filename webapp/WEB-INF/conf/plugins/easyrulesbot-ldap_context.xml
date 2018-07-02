@@ -4,12 +4,6 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd" >
 
-    <bean id="easyrulesbot.processor.searchfield" class="fr.paris.lutece.plugins.easyrulesbot.service.response.processors.MultipleValuesResponseProcessor" >
-        <property name="name" value="SEARCH_FIELD" />
-        <property name="mutipleValuesMapFile" value="/WEB-INF/plugins/easyrulesbot/modules/ldap/searchfield.txt" />
-        <property name="invalidResponseMessageI18nKey" value="module.easyrulesbot.ldap.processor.searchfield.invalidResponse" />
-    </bean>
-
     <bean id="easyrulesbot.processor.searchvalue" class="fr.paris.lutece.plugins.easyrulesbot.modules.ldap.service.SearchValueProcessor" >
         <property name="name" value="SEARCH_VALUE" />
         <property name="searchField" value="searchfield" />
@@ -29,12 +23,22 @@
         </property>
         <property name="reinitResponse" value="reinit" />
         <property name="ldapSearch" value="ldapsearch" />
+        <property name="listInitialRules">
+            <list>
+                <value>initialsearchvalue</value>
+            </list>
+        </property>
     </bean>
 
 
     <bean id="easyrulesbot.condition.dataKeyValueOrNull" class="fr.paris.lutece.plugins.easyrulesbot.service.bot.rules.conditions.ConditionFactory">
         <property name="name" value="DATAKEY_VALUE_OR_NULL" />
         <property name="className" value="fr.paris.lutece.plugins.easyrulesbot.modules.ldap.service.DataValueOrNullCondition" />
+    </bean>
+
+    <bean id="easyrulesbot.condition.dataKeyExist" class="fr.paris.lutece.plugins.easyrulesbot.service.bot.rules.conditions.ConditionFactory">
+        <property name="name" value="DATAKEY_EXIST" />
+        <property name="className" value="fr.paris.lutece.plugins.easyrulesbot.modules.ldap.service.DataExistCondition" />
     </bean>
 
 </beans>

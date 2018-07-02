@@ -44,9 +44,11 @@ import fr.paris.lutece.portal.service.util.AppPropertiesService;
 import fr.paris.lutece.portal.web.l10n.LocaleService;
 import fr.paris.lutece.util.html.HtmlTemplate;
 import fr.paris.lutece.util.ldap.LdapUtil;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javax.naming.CommunicationException;
@@ -57,6 +59,7 @@ import javax.naming.directory.Attributes;
 import javax.naming.directory.DirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * SearchValueProcessor
@@ -70,6 +73,7 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
     private static final String PROPERTY_BIND_PASSWORD = "easyrulesbot-ldap.ldap.connectionPassword";
     private static final String PROPERTY_USER_DN_SEARCH_BASE = "easyrulesbot-ldap.ldap.personBase";
     private static final String PROPERTY_USER_SUBTREE = "easyrulesbot-ldap.ldap.personSubtree";
+    private static final String PROPERTY_FILTER_PARAMETER_PREFIX = "easyrulesbot-ldap.ldap.filter.parameter";
     private static final String PROPERTY_DN_ATTRIBUTE_PREFIX = "easyrulesbot-ldap.ldap.dn.attributeName";
 
     private static final String TEMPLATE_LDAP_FILE = "skin/plugins/easyrulesbot/modules/ldap/ldap.html";
@@ -78,6 +82,7 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
 
     private static String _strSearchField;
     private static String _strLdapSearch;
+    private static String _strDefaultSearchField = "default";
     private static String _strShowDirectory;
     private String _strInvalidResponseMessage;
     private String _strInvalidResponseMessageI18nKey;
@@ -93,20 +98,12 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
 
         if ( strResponse != null && !strResponse.isEmpty(  ) )
         {
-            String strCriteriaName = map.get( _strSearchField );
-            if ( strCriteriaName != null )
-            {
-                String strParameters = map.get( _strLdapSearch );
-                if ( strParameters != null )
-                {
-                    strParameters += "," + strCriteriaName + ":" + strResponse;  
-                }
-                else
-                {
-                    strParameters = strCriteriaName + ":" + strResponse; 
-                }
-                mapData.put( _strLdapSearch, strParameters ); 
-            }
+            String strCriteriaName = !StringUtils.isEmpty( map.get( _strSearchField ) ) ? map.get( _strSearchField ) : _strDefaultSearchField;
+            String strParameters = !StringUtils.isEmpty( map.get( _strLdapSearch ) ) ? map.get( _strLdapSearch ) : "";
+            String strDelimiter = !StringUtils.isEmpty( strParameters ) ? "," : "";
+
+            strParameters += strDelimiter + strCriteriaName + ":" + strResponse;  
+            mapData.put( _strLdapSearch, strParameters ); 
 
             String strDirectory = buildDirectory( mapData );
             mapData.put( _strShowDirectory, strDirectory );
@@ -329,7 +326,6 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
                 }
             }
         }
-//        return "(&" + mapData.get( _strLdapSearch ) + ")";
 
         return mapCriteria;
     }
@@ -348,9 +344,15 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
         for (Map.Entry<String, String> entry : mapSearchCriteria.entrySet())
         {
             String strCriteriaName = entry.getKey();
-            String strCriteriaKey = AppPropertiesService.getProperty( PROPERTY_DN_ATTRIBUTE_PREFIX + "." + strCriteriaName);
-            String strCriteriaValue = entry.getValue();
-            strParameters += "(" + strCriteriaKey + "=" + strCriteriaValue + "*)";
+            String strCriteriaKey = AppPropertiesService.getProperty( PROPERTY_FILTER_PARAMETER_PREFIX + "." + strCriteriaName);
+            String[] strCriteriaValue = entry.getValue( ).split( " " );
+            String strParameter = "";
+
+            for (String strCriteriaToken : strCriteriaValue)
+            {
+                strParameter += MessageFormat.format( strCriteriaKey, strCriteriaToken);
+            }
+            strParameters += strParameter;
         }
 
         return ( strParameters.isEmpty( ) ) ? "" : "(&" + strParameters + ")";
