@@ -84,6 +84,14 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
     private static String _strLdapSearch;
     private static String _strDefaultSearchField = "default";
     private static String _strShowDirectory;
+
+    private static String _strInitialContextProvider = AppPropertiesService.getProperty( PROPERTY_INITIAL_CONTEXT_PROVIDER );
+    private static String _strProviderUrl = AppPropertiesService.getProperty( PROPERTY_PROVIDER_URL );
+    private static String _strBindDn = AppPropertiesService.getProperty( PROPERTY_BIND_DN );
+    private static String _strBindPassword = AppPropertiesService.getProperty( PROPERTY_BIND_PASSWORD );
+    private static String _strPersonDnSearchBase = AppPropertiesService.getProperty( PROPERTY_USER_DN_SEARCH_BASE );
+    private static int _nPersonDnSearchScope = AppPropertiesService.getProperty( PROPERTY_USER_SUBTREE ).equalsIgnoreCase( "true" ) ? SearchControls.SUBTREE_SCOPE : SearchControls.ONELEVEL_SCOPE ;
+
     private String _strInvalidResponseMessage;
     private String _strInvalidResponseMessageI18nKey;
 
@@ -231,15 +239,15 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
         try
         {
             SearchControls scPersonSearchControls = new SearchControls(  );
-            scPersonSearchControls.setSearchScope( getPersonDnSearchScope(  ) );
+            scPersonSearchControls.setSearchScope( _nPersonDnSearchScope );
             scPersonSearchControls.setReturningObjFlag( true );
             scPersonSearchControls.setCountLimit( 0 );
 
-            context = LdapUtil.getContext( getInitialContextProvider(  ), getProviderUrl(  ), getBindDn(  ),
-                    getBindPassword(  ) );
+            context = LdapUtil.getContext( _strInitialContextProvider, _strProviderUrl, _strBindDn,
+                    _strBindPassword );
 
             NamingEnumeration personResults = LdapUtil.searchUsers( context, strPersonSearchFilter,
-                    getPersonDnSearchBase(  ), "", scPersonSearchControls );
+                    _strPersonDnSearchBase, "", scPersonSearchControls );
 
             AppLogService.info( this.getClass(  ).toString(  ) + " : Search persons with searchFilter" + 
                     strPersonSearchFilter );
@@ -362,73 +370,6 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
     }
 
     /**
-     * Get the initial context provider from the properties
-     * 
-     * @return The initial context provider
-     */
-    private String getInitialContextProvider(  )
-    {
-        return AppPropertiesService.getProperty( PROPERTY_INITIAL_CONTEXT_PROVIDER );
-    }
-
-    /**
-     * Get the provider url from the properties
-     * 
-     * @return The provider url
-     */
-    private String getProviderUrl(  )
-    {
-        return AppPropertiesService.getProperty( PROPERTY_PROVIDER_URL );
-    }
-
-    /**
-     * Get the base person dn from the properties
-     * 
-     * @return The base person dn
-     */
-    private String getPersonDnSearchBase(  )
-    {
-        return AppPropertiesService.getProperty( PROPERTY_USER_DN_SEARCH_BASE );
-    }
-
-    /**
-     * Get the person dn search scope
-     * 
-     * @return The person dn search scope
-     */
-    private int getPersonDnSearchScope(  )
-    {
-        String strSearchScope = AppPropertiesService.getProperty( PROPERTY_USER_SUBTREE );
-
-        if ( strSearchScope.equalsIgnoreCase( "true" ) )
-        {
-            return SearchControls.SUBTREE_SCOPE;
-        }
-
-        return SearchControls.ONELEVEL_SCOPE;
-    }
-
-    /**
-     * Get the bind dn
-     * 
-     * @return The bind dn
-     */
-    private String getBindDn(  )
-    {
-        return AppPropertiesService.getProperty( PROPERTY_BIND_DN );
-    }
-
-    /**
-     * Get the bing password
-     * 
-     * @return The bing password
-     */
-    private String getBindPassword(  )
-    {
-        return AppPropertiesService.getProperty( PROPERTY_BIND_PASSWORD );
-    }
-
-    /**
      * Return info for debugging
      * 
      * @param PersonSearchFilter
@@ -439,7 +380,7 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
     {
         StringBuffer sb = new StringBuffer(  );
         sb.append( "personBase : " );
-        sb.append( getPersonDnSearchBase(  ) );
+        sb.append( _strPersonDnSearchBase );
         sb.append( "\npersonSearch : " );
         sb.append( strPersonSearchFilter );
 
