@@ -350,7 +350,10 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
 
             for (String strCriteriaToken : strCriteriaValue)
             {
-                strParameter += MessageFormat.format( strCriteriaKey, strCriteriaToken);
+                if( !StringUtils.isEmpty( strCriteriaKey ) && !StringUtils.isEmpty( strCriteriaToken ) )
+                {
+                    strParameter += MessageFormat.format( strCriteriaKey, strCriteriaToken);
+                }
             }
             strParameters += strParameter;
         }
