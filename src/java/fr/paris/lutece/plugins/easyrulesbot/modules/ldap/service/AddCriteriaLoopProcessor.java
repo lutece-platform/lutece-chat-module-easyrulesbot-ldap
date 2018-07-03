@@ -49,6 +49,9 @@ import java.util.Map;
  */
 public class AddCriteriaLoopProcessor extends AbstractProcessor implements ResponseProcessor
 {
+    private static final String I18N_KEY_SEARCH_PARAMETER_PREFIX = "module.easyrulesbot.ldap.searchParameter.";
+    private static final String KEY_SEARCH_FIELD_NAME = "searchfieldname";
+
     private String _strMutipleValuesMapFile;
     private Map<String, List<String>> _mapMultipleValues;
     private List<String> _listLoopRules;
@@ -124,6 +127,10 @@ public class AddCriteriaLoopProcessor extends AbstractProcessor implements Respo
             {
                 mapData.remove( strInitialRule );
             }
+        }
+        else
+        {
+            mapData.put( KEY_SEARCH_FIELD_NAME, I18nService.getLocalizedString( I18N_KEY_SEARCH_PARAMETER_PREFIX + strValue, locale ) );
         }
 
         return strValue;
