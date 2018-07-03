@@ -51,7 +51,7 @@ rules:
         -   title: Téléphone
             value: phonenumber
         -   title: Recommencer la recherche
-            value: reinit
+            value: reset
         conditions:
         -   condition: DATAKEY_VALUE
             parameters: [ continueloop , true ]

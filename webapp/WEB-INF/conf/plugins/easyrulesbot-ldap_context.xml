@@ -22,13 +22,6 @@
                 <value>searchvalue</value>
             </list>
         </property>
-        <property name="reinitResponse" value="reinit" />
-        <property name="ldapSearch" value="ldapsearch" />
-        <property name="listInitialRules">
-            <list>
-                <value>initialsearchvalue</value>
-            </list>
-        </property>
     </bean>
 
 

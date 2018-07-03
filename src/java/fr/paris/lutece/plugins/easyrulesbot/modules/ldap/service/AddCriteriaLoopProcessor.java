@@ -55,9 +55,6 @@ public class AddCriteriaLoopProcessor extends AbstractProcessor implements Respo
     private String _strMutipleValuesMapFile;
     private Map<String, List<String>> _mapMultipleValues;
     private List<String> _listLoopRules;
-    private static String _strReinitResponse;
-    private static String _strLdapSearch;
-    private List<String> _listInitialRules;
     private String _strInvalidResponseMessage;
     private String _strInvalidResponseMessageI18nKey;
 
@@ -120,18 +117,7 @@ public class AddCriteriaLoopProcessor extends AbstractProcessor implements Respo
             mapData.remove( strLoopRule );
         }
 
-        if ( strValue.equals( _strReinitResponse ) )
-        {
-            mapData.remove( _strLdapSearch );
-            for ( String strInitialRule : _listInitialRules )
-            {
-                mapData.remove( strInitialRule );
-            }
-        }
-        else
-        {
-            mapData.put( KEY_SEARCH_FIELD_NAME, I18nService.getLocalizedString( I18N_KEY_SEARCH_PARAMETER_PREFIX + strValue, locale ) );
-        }
+        mapData.put( KEY_SEARCH_FIELD_NAME, I18nService.getLocalizedString( I18N_KEY_SEARCH_PARAMETER_PREFIX + strValue, locale ) );
 
         return strValue;
     }
@@ -203,16 +189,6 @@ public class AddCriteriaLoopProcessor extends AbstractProcessor implements Respo
     }
 
     /**
-     * Set the response value corresponding to reinit
-     * 
-     * @param strReinitResponse
-     */
-    public void setReinitResponse( String strReinitResponse )
-    {
-        _strReinitResponse = strReinitResponse;
-    }
-
-    /**
      * Set the list of rules int the loop
      * 
      * @param list
@@ -221,27 +197,5 @@ public class AddCriteriaLoopProcessor extends AbstractProcessor implements Respo
     public void setListLoopRules( List<String> list )
     {
         _listLoopRules = list;
-    }
-
-    /**
-     * Set the ldap search key
-     * 
-     * @param strLdapSearch
-     *            The ldap search key
-     */
-    public void setLdapSearch( String strLdapSearch )
-    {
-        _strLdapSearch = strLdapSearch;
-    }
-
-    /**
-     * Set the list of initial rules
-     * 
-     * @param listInitialRules
-     *            The list of initial rules
-     */
-    public void setListInitialRules( List<String> listInitialRules )
-    {
-        _listInitialRules = listInitialRules;
     }
 }
