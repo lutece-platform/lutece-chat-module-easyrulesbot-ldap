@@ -1,115 +1,121 @@
-<div>#i18n{module.easyrulesbot.ldap.result.size} : ${persons_list?size}</div>
-<div>
-    #i18n{module.easyrulesbot.ldap.result.criteria} :
-    <ul>
-        <#list criteria_list as name, value>
-            <li>#i18n{module.easyrulesbot.ldap.searchParameter.${name}} : ${value}</li>
-        </#list>
-    </ul>
-</div>
-
-<div>#i18n{module.easyrulesbot.ldap.result.display} :</div>
-<#if persons_list?has_content>
-    <#if persons_list?size lt 5>
-        <#list persons_list as person>
-            <div class="person-card">
-                <table class="">
-                    <tr>
-                        <td>#i18n{module.easyrulesbot.ldap.searchParameter.familyname} :</td>
-                        <td>${person.familyname}</td>
-                    </tr>
-                    <tr>
-                        <td>#i18n{module.easyrulesbot.ldap.searchParameter.name} :</td>
-                        <td>${person.name}</td>
-                    </tr>
-                    <#if person.direction?has_content>
-                        <tr>
-                            <td>#i18n{module.easyrulesbot.ldap.searchParameter.direction} :</td>
-                            <td>${person.direction}</td>
-                        </tr>
-                    </#if>
-                    <#if person.fonction?has_content>
-                        <tr>
-                            <td>#i18n{module.easyrulesbot.ldap.searchParameter.fonction} :</td>
-                            <td>${person.fonction}</td>
-                        </tr>
-                    </#if>
-                    <#if person.mail?has_content>
-                        <tr>
-                            <td>#i18n{module.easyrulesbot.ldap.searchParameter.mail} :</td>
-                            <td>${person.mail}</td>
-                        </tr>
-                    </#if>
-                    <#if person.phonenumber?has_content>
-                        <tr>
-                            <td>#i18n{module.easyrulesbot.ldap.searchParameter.phonenumber} :</td>
-                            <td>${person.phonenumber}</td>
-                        </tr>
-                    </#if>
-                    <#if person.mobilepro?has_content>
-                        <tr>
-                            <td>#i18n{module.easyrulesbot.ldap.searchParameter.mobilepro} :</td>
-                            <td>${person.mobilepro}</td>
-                        </tr>
-                    </#if>
-                    <#if person.fax?has_content>
-                        <tr>
-                            <td>#i18n{module.easyrulesbot.ldap.searchParameter.fax} :</td>
-                            <td>${person.fax}</td>
-                        </tr>
-                    </#if>
-                    <#if person.adminposition1?has_content>
-                        <tr>
-                            <td>#i18n{module.easyrulesbot.ldap.searchParameter.adminposition1} :</td>
-                            <td>${person.adminposition1}</td>
-                        </tr>
-                    </#if>
-                    <#if person.adminposition2?has_content>
-                        <tr>
-                            <td></td>
-                            <td>${person.adminposition2}</td>
-                        </tr>
-                    </#if>
-                    <#if person.adminposition3?has_content>
-                        <tr>
-                            <td></td>
-                            <td>${person.adminposition3}</td>
-                        </tr>
-                    </#if>
-                    <#if person.adminposition4?has_content>
-                        <tr>
-                            <td></td>
-                            <td>${person.adminposition4}</td>
-                        </tr>
-                    </#if>
-                    <#if person.site?has_content>
-                        <tr>
-                            <td>#i18n{module.easyrulesbot.ldap.searchParameter.site} :</td>
-                            <td>${person.site}</td>
-                        </tr>
-                    </#if>
-                    <#if person.office?has_content>
-                        <tr>
-                            <td>#i18n{module.easyrulesbot.ldap.searchParameter.office} :</td>
-                            <td>${person.office}</td>
-                        </tr>
-                    </#if>
-                    <#if person.street?has_content>
-                        <tr>
-                            <td>#i18n{module.easyrulesbot.ldap.searchParameter.street} :</td>
-                            <td>${person.street} ${person.postalcode} ${person.city}</td>
-                        </tr>
-                    </#if>
-                </table>
-                <a href="mailto:${person.mail}" class="btn btn-primary"><i class="fa fa-envelope"></i> #i18n{module.easyrulesbot.ldap.button.mail}</a>
-                <a href="sip:${person.mail}" class="btn btn-primary"><i class="fa fa-weixin"></i> #i18n{module.easyrulesbot.ldap.button.chat}</a>
-            </div>
-        </#list>
+<#if persons_list??>
+    <#if persons_list?size == 0>
+        #i18n{module.easyrulesbot.ldap.result.null}
     <#else>
-    <ul>
-        <#list persons_list as person>
-            <li>${person.familyname} ${person.name}<#if person.direction?has_content>, ${person.direction}</#if><#if person.phonenumber?has_content> (${person.phonenumber})</#if></li>
-        </#list>
-    </ul>
+        <div>#i18n{module.easyrulesbot.ldap.result.size} : ${persons_list?size}</div>
+        <div>
+            #i18n{module.easyrulesbot.ldap.result.criteria} :
+            <ul>
+                <#list criteria_list as name, value>
+                    <li>#i18n{module.easyrulesbot.ldap.searchParameter.${name}} : ${value}</li>
+                </#list>
+            </ul>
+        </div>
+
+        <div>#i18n{module.easyrulesbot.ldap.result.display} :</div>
+        <#if persons_list?size lt 5>
+            <#list persons_list as person>
+                <div class="person-card">
+                    <table class="">
+                        <tr>
+                            <td>#i18n{module.easyrulesbot.ldap.searchParameter.familyname} :</td>
+                            <td>${person.familyname}</td>
+                        </tr>
+                        <tr>
+                            <td>#i18n{module.easyrulesbot.ldap.searchParameter.name} :</td>
+                            <td>${person.name}</td>
+                        </tr>
+                        <#if person.direction?has_content>
+                            <tr>
+                                <td>#i18n{module.easyrulesbot.ldap.searchParameter.direction} :</td>
+                                <td>${person.direction}</td>
+                            </tr>
+                        </#if>
+                        <#if person.fonction?has_content>
+                            <tr>
+                                <td>#i18n{module.easyrulesbot.ldap.searchParameter.fonction} :</td>
+                                <td>${person.fonction}</td>
+                            </tr>
+                        </#if>
+                        <#if person.mail?has_content>
+                            <tr>
+                                <td>#i18n{module.easyrulesbot.ldap.searchParameter.mail} :</td>
+                                <td>${person.mail}</td>
+                            </tr>
+                        </#if>
+                        <#if person.phonenumber?has_content>
+                            <tr>
+                                <td>#i18n{module.easyrulesbot.ldap.searchParameter.phonenumber} :</td>
+                                <td>${person.phonenumber}</td>
+                            </tr>
+                        </#if>
+                        <#if person.mobilepro?has_content>
+                            <tr>
+                                <td>#i18n{module.easyrulesbot.ldap.searchParameter.mobilepro} :</td>
+                                <td>${person.mobilepro}</td>
+                            </tr>
+                        </#if>
+                        <#if person.fax?has_content>
+                            <tr>
+                                <td>#i18n{module.easyrulesbot.ldap.searchParameter.fax} :</td>
+                                <td>${person.fax}</td>
+                            </tr>
+                        </#if>
+                        <#if person.adminposition1?has_content>
+                            <tr>
+                                <td>#i18n{module.easyrulesbot.ldap.searchParameter.adminposition1} :</td>
+                                <td>${person.adminposition1}</td>
+                            </tr>
+                        </#if>
+                        <#if person.adminposition2?has_content>
+                            <tr>
+                                <td></td>
+                                <td>${person.adminposition2}</td>
+                            </tr>
+                        </#if>
+                        <#if person.adminposition3?has_content>
+                            <tr>
+                                <td></td>
+                                <td>${person.adminposition3}</td>
+                            </tr>
+                        </#if>
+                        <#if person.adminposition4?has_content>
+                            <tr>
+                                <td></td>
+                                <td>${person.adminposition4}</td>
+                            </tr>
+                        </#if>
+                        <#if person.site?has_content>
+                            <tr>
+                                <td>#i18n{module.easyrulesbot.ldap.searchParameter.site} :</td>
+                                <td>${person.site}</td>
+                            </tr>
+                        </#if>
+                        <#if person.office?has_content>
+                            <tr>
+                                <td>#i18n{module.easyrulesbot.ldap.searchParameter.office} :</td>
+                                <td>${person.office}</td>
+                            </tr>
+                        </#if>
+                        <#if person.street?has_content>
+                            <tr>
+                                <td>#i18n{module.easyrulesbot.ldap.searchParameter.street} :</td>
+                                <td>${person.street} ${person.postalcode} ${person.city}</td>
+                            </tr>
+                        </#if>
+                    </table>
+                    <a href="mailto:${person.mail}" class="btn btn-primary"><i class="fa fa-envelope"></i> #i18n{module.easyrulesbot.ldap.button.mail}</a>
+                    <a href="sip:${person.mail}" class="btn btn-primary"><i class="fa fa-weixin"></i> #i18n{module.easyrulesbot.ldap.button.chat}</a>
+                </div>
+            </#list>
+        <#else>
+            <ul>
+                <#list persons_list as person>
+                    <li>${person.familyname} ${person.name}<#if person.direction?has_content>, ${person.direction}</#if><#if person.phonenumber?has_content> (${person.phonenumber})</#if></li>
+                </#list>
+            </ul>
+        </#if>
     </#if>
+<#else>
+    #i18n{module.easyrulesbot.ldap.result.error}
 </#if>

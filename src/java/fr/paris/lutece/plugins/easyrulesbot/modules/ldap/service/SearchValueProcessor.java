@@ -84,6 +84,7 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
     private static String _strLdapSearch;
     private static String _strDefaultSearchField = "default";
     private static String _strShowDirectory;
+    private static String _strContinueLoop;
 
     private static String _strInitialContextProvider = AppPropertiesService.getProperty( PROPERTY_INITIAL_CONTEXT_PROVIDER );
     private static String _strProviderUrl = AppPropertiesService.getProperty( PROPERTY_PROVIDER_URL );
@@ -113,8 +114,13 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
             strParameters += strDelimiter + strCriteriaName + ":" + strResponse;  
             mapData.put( _strLdapSearch, strParameters ); 
 
-            String strDirectory = buildDirectory( mapData );
+            Map<String, String> mapPersonSearchCriteria = getMapParameters( mapData );
+
+            List<Map> personList = getPersonList( mapPersonSearchCriteria );
+
+            String strDirectory = buildDirectory( mapData, mapPersonSearchCriteria, personList );
             mapData.put( _strShowDirectory, strDirectory );
+            mapData.put( _strContinueLoop, String.valueOf( personList != null && !personList.isEmpty(  ) ) );
 
             return strResponse;
         }
@@ -178,6 +184,17 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
     }
 
     /**
+     * Set the continue loop key
+     * 
+     * @param strContinueLoop
+     *            The continue loop key
+     */
+    public void setContinueLoop( String strContinueLoop )
+    {
+        _strContinueLoop = strContinueLoop;
+    }
+
+    /**
      * Returns invalid response message
      * 
      * @param locale
@@ -205,14 +222,16 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
      * 
      * @param mapData
      *            The map of data
+     * @param mapPersonSearchCriteria
+     *            The map of search criteria
+     * @param personList
+     *            The list of person
      * @return The directory table
      */
-    private String buildDirectory( Map mapData )
+    private String buildDirectory( Map mapData, Map<String, String> mapPersonSearchCriteria, List<Map> personList )
     {
-        Map<String, String> mapPersonSearchCriteria = getMapParameters( mapData );
-        
         Map<String, Object> model = new HashMap<String, Object>( );
-        model.put( MARK_PERSONS_LIST, getPersonList( mapPersonSearchCriteria ) );
+        model.put( MARK_PERSONS_LIST, personList );
         model.put( MARK_CRITERIA_LIST, mapPersonSearchCriteria );
 
         HtmlTemplate template = AppTemplateService.getTemplate( TEMPLATE_LDAP_FILE, LocaleService.getDefault(  ), model );
@@ -227,7 +246,7 @@ public class SearchValueProcessor extends AbstractProcessor implements ResponseP
      *            The map of search criteria
      * @return The list of persons
      */
-    private Collection getPersonList( Map<String, String> mapPersonSearchCriteria )
+    private ArrayList<Map> getPersonList( Map<String, String> mapPersonSearchCriteria )
     {
         ArrayList<Map> personList = new ArrayList<Map>(  );
         SearchResult sr = null;

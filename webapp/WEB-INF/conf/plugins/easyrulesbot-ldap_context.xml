@@ -9,6 +9,7 @@
         <property name="searchField" value="searchfield" />
         <property name="ldapSearch" value="ldapsearch" />
         <property name="showDirectory" value="showdirectory" />
+        <property name="continueLoop" value="continueloop" />
         <property name="invalidResponseMessageI18nKey" value="module.easyrulesbot.ldap.processor.searchvalue.invalidResponse" />
     </bean>
 

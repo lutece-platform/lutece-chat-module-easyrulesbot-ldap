@@ -52,3 +52,21 @@ rules:
             value: phonenumber
         -   title: Recommencer la recherche
             value: reinit
+        conditions:
+        -   condition: DATAKEY_VALUE
+            parameters: [ continueloop , true ]
+
+    -   rule: Finalize
+        priority: 99
+        description: End of the session
+        message: Nous avons terminé. Voulez-vous faire une nouvelle recherche ?
+        dataKey: restart
+        buttons:
+        -   title: Recommencer la recherche
+            value: reset
+        -   title: Non
+            value: no
+        processor: YES_NO
+        conditions:
+        -   condition: DATAKEY_MISSING
+        responseComment: Au revoir et à bientôt !
