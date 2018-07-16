@@ -16,7 +16,7 @@ filters:
 rules:
     -   rule: InitSearchValue
         priority: 10
-        message: "{i18n('module.easyrulesbot.ldap.rule.initsearchvalue.message', (user_firstname?has_content)?then('' + user_firstname, ''))}"
+        message: Bonjour {(user_firstname?has_content)?then('' + suser_firstname, '')} ! Bienvenue dans l'annuaire de la Ville. Tapez votre recherche ci-dessous, je vais regarder parmi les noms, les prénoms ou les directions ceux qui contiennent vos propositions.
         dataKey: initialsearchvalue
         processor: SEARCH_VALUE
         conditions:
@@ -25,7 +25,7 @@ rules:
 
     -   rule: SearchValue
         priority: 11
-        message: "{i18n('module.easyrulesbot.ldap.rule.searchvalue.message', i18n('module.easyrulesbot.ldap.searchParameter.question.' + name))}"
+        message: Quelle valeur doit prendre le critère {searchfieldname} ?
         dataKey: searchvalue
         processor: SEARCH_VALUE
         conditions:
@@ -36,7 +36,7 @@ rules:
 
     -   rule: AddCriteria
         priority: 12
-        message: "{i18n('module.easyrulesbot.ldap.rule.addcriteria.message')}"
+        message: Vous avez trouvé ce que vous cherchiez ? Vous pouvez affiner votre recherche en rajoutant un critère ou bien faire une nouvelle recherche
         dataKey: searchfield
         processor: ADD_CRITERIA_LOOP
         buttons:
@@ -59,7 +59,7 @@ rules:
     -   rule: Finalize
         priority: 99
         description: End of the session
-        message: "{i18n('module.easyrulesbot.ldap.rule.finalize.message')}"
+        message: Nous avons terminé. Voulez-vous faire une nouvelle recherche ?
         dataKey: restart
         buttons:
         -   title: Recommencer la recherche
